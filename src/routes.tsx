@@ -1,13 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ListCategories from "./pages/ListCategories";
-import AddCategorie from "./pages/AddCategorie";
+import ListShops from "./pages/ListShops";
+import UpsertCategorie from "./pages/UpsertCategorie";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ListCategories />} />
-        <Route path="/adiciona-categoria" element={<AddCategorie />} />
+        <Route path="/" element={<ListShops />} />
+        <Route path="/adiciona-loja" element={<UpsertCategorie />} />
+        <Route path="/edita-loja/:id" element={<UpsertCategorie />} />
       </Routes>
     </BrowserRouter>
   );

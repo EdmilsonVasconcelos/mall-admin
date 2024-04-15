@@ -1,9 +1,9 @@
 import { Address } from "./address";
 
 export type Shop = {
-  id: number;
+  id?: number;
   name: string;
-  description: string;
-  active: boolean;
+  phoneNumber: string;
+  isActive: boolean;
   addresses: Address[];
 };
