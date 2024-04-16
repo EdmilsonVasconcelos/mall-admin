@@ -8,7 +8,7 @@ import { Address } from "../types/address";
 import { BASE_API, CELL_PHONE_REGEX } from "../utils/BaseApi";
 import axios from "axios";
 
-const UpsertCategorieView = () => {
+const UpsertShopView = () => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [messageAlert, setMessageAlert] = useState<string>("");
   const [variantAlert, setVariantAlert] = useState<string>("");
@@ -35,7 +35,7 @@ const UpsertCategorieView = () => {
     }
   }, [id]);
 
-  const handleAddShop = (e: React.FormEvent) => {
+  const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!name || !whatsapp || !street || !city || !number) {
@@ -59,21 +59,21 @@ const UpsertCategorieView = () => {
       isActive: false,
     };
 
-    addShop(newShop);
+    if (id) {
+      update(newShop);
+    } else {
+      add(newShop);
+    }
   };
 
-  const addShop = async (shop: Shop) => {
+  const add = async (shop: Shop) => {
     await axios
       .post(`${BASE_API}/shop`, shop)
       .then((response) => {
-        setMessageAlert("Loja cadastrada com sucesso");
         setShowAlert(true);
-        setName("");
-        setWhatsapp("");
-        setStreet("");
-        setCity("");
-        setNumber("");
+        setMessageAlert("Loja cadastrada com sucesso");
         setVariantAlert("success");
+        clearFields();
       })
       .catch((error) => {
         console.log(error);
@@ -83,12 +83,38 @@ const UpsertCategorieView = () => {
       });
   };
 
+  const update = async (shop: Shop) => {
+    if (id) {
+      await axios
+        .patch(`${BASE_API}/shop/${atob(id)}`, shop)
+        .then((response) => {
+          setShowAlert(true);
+          setMessageAlert("Loja editada com sucesso com sucesso");
+          setVariantAlert("success");
+          clearFields();
+        })
+        .catch((error) => {
+          console.log(error);
+          setMessageAlert("Erro ao cadastrar loja");
+          setShowAlert(true);
+          setVariantAlert("danger");
+        });
+    }
+  };
+
+  const clearFields = () => {
+    setName("");
+    setWhatsapp("");
+    setStreet("");
+    setCity("");
+    setNeighborhood("");
+    setNumber("");
+  };
+
   return (
     <>
       <Row className="mb-3">
-        <Col>
-          {id ? <h2>Editar loja {name}</h2> : <h2>Cadastrar nova loja</h2>}
-        </Col>
+        <Col>{id ? <h2>Editar loja</h2> : <h2>Cadastrar nova loja</h2>}</Col>
         <Col className="text-end">
           <Link to="/" className="btn btn-primary">
             Ver lojas
@@ -105,7 +131,7 @@ const UpsertCategorieView = () => {
             />
           )}
 
-          <Form onSubmit={handleAddShop}>
+          <Form onSubmit={handleAdd}>
             <Form.Group className="mb-3" controlId="name">
               <Form.Label>Nome</Form.Label>
               <Form.Control
@@ -190,4 +216,4 @@ const UpsertCategorieView = () => {
   );
 };
 
-export default UpsertCategorieView;
+export default UpsertShopView;
