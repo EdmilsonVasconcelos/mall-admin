@@ -180,10 +180,10 @@ const UpsertShopView = () => {
               <Col>
                 {" "}
                 <Form.Group className="mb-3" controlId="referenceNeighborhood">
-                  <Form.Label>Cidade</Form.Label>
+                  <Form.Label>Bairro</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Nome da cidade, ex: Recife"
+                    placeholder="Nome do bairro, ex: Caetés I"
                     value={neighborhood}
                     onChange={(e) => setNeighborhood(e.target.value)}
                   />

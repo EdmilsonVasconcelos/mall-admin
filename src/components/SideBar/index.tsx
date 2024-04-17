@@ -12,7 +12,7 @@ const SideBar = () => {
             <Link to={`/`}>Lojas</Link>
           </Container>
           <Container className="link">
-            <Link to={`/`}>Categorias</Link>
+            <Link to={`/lista-categorias`}>Categorias</Link>
           </Container>
         </Container>
       </Stack>

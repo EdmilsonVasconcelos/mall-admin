@@ -21,7 +21,7 @@ const QuestionModal = ({
         </Modal.Header>
         <Modal.Body>Deseja deletar {nameRegister}?</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setQuestion(false)}>
+          <Button variant="secondary" onClick={() => handleClose()}>
             Cancelar
           </Button>
           <Button variant="primary" onClick={() => setQuestion(true)}>

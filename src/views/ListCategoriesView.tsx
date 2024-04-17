@@ -1,14 +1,14 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { BASE_API } from "../utils/BaseApi";
+import QuestionModal from "../components/Modal/Question";
 import { Card, Col, Row, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { Shop } from "../types/shop";
-import axios from "axios";
-import { BASE_API } from "../utils/BaseApi";
 import { Pencil, Trash } from "react-bootstrap-icons";
-import QuestionModal from "../components/Modal/Question";
+import { Categorie } from "../types/categories";
 
-const ListShopsView = () => {
-  const [shops, setShops] = useState<Shop[]>([]);
+const ListCategoriesView = () => {
+  const [categories, setCategories] = useState<Categorie[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [shopId, setShopId] = useState<number>(0);
   const [nameRegister, setNameRegister] = useState<string>("");
@@ -16,23 +16,23 @@ const ListShopsView = () => {
 
   const handleCloseModal = () => setShowModal(false);
 
-  const fetchShops = async () => {
+  const fetch = async () => {
     const response = await axios
-      .get(`${BASE_API}/shop`)
+      .get(`${BASE_API}/category`)
       .then((res) => {
         return res.data;
       })
       .catch((res) => {
         if (res.response.status === 404) {
-          setShops([]);
+          setCategories([]);
         }
       });
 
-    setShops(response);
+    setCategories(response);
   };
 
   useEffect(() => {
-    fetchShops();
+    fetch();
   }, []);
 
   useEffect(() => {
@@ -49,9 +49,9 @@ const ListShopsView = () => {
   };
 
   const deleteRegister = async () => {
-    await axios.delete(`${BASE_API}/shop/${shopId}`).then(() => {
+    await axios.delete(`${BASE_API}/category/${shopId}`).then(() => {
       setShowModal(false);
-      fetchShops();
+      fetch();
     });
   };
 
@@ -60,54 +60,44 @@ const ListShopsView = () => {
       <QuestionModal
         show={showModal}
         handleClose={handleCloseModal}
-        nameRegister={`loja ${nameRegister}`}
+        nameRegister={`categoria ${nameRegister}`}
         setQuestion={setQuestion}
       />
 
       <Row className="mb-3">
         <Col>
-          <h2>Lista de lojas</h2>
+          <h2>Lista de categorias</h2>
         </Col>
         <Col className="text-end">
-          <Link to="adiciona-loja" className="btn btn-primary">
-            Adicionar loja
+          <Link to="/adiciona-categoria" className="btn btn-primary">
+            Adicionar categoria
           </Link>
         </Col>
       </Row>
       <Card>
-        {shops?.length && (
+        {categories?.length && (
           <Card.Body>
             <Table striped>
               <thead>
                 <tr className="text-center">
-                  <th>Nome da loja</th>
-                  <th>Whatsapp</th>
-                  <th>Ativa</th>
-                  <th>Endereço</th>
+                  <th>Nome da categoria</th>
                   <th className="center">Ação</th>
                 </tr>
               </thead>
               <tbody>
-                {shops?.map((shop) => (
+                {categories?.map((shop) => (
                   <tr key={shop.id} className="text-center">
                     <td>{shop.name}</td>
-                    <td>{shop.phoneNumber}</td>
-                    <td>{shop.isActive ? "Sim" : "Não"}</td>
-                    <td>
-                      {shop.addresses.map((address) => (
-                        <p
-                          key={address.id}
-                        >{`${address.street}, ${address.number}, ${address.neighborhood} - ${address.city}`}</p>
-                      ))}
-                    </td>
                     <td>
                       <Row>
                         <Col>
                           {shop.id && (
                             <Link
                               className="btn btn-warning text-white"
-                              to={`/edita-loja/${btoa(shop?.id?.toString())}`}
-                              title={`Editar loja ${shop.name}`}
+                              to={`/edita-categoria/${btoa(
+                                shop?.id?.toString()
+                              )}`}
+                              title={`Editar categoria ${shop.name}`}
                             >
                               <Pencil />
                             </Link>
@@ -117,7 +107,7 @@ const ListShopsView = () => {
                           {shop.id && (
                             <button
                               className="btn btn-danger text-white"
-                              title={`Deletar loja ${shop.name}`}
+                              title={`Deletar categoria ${shop.name}`}
                               onClick={() =>
                                 handleDelete(shop?.id ? shop.id : 0, shop.name)
                               }
@@ -135,11 +125,11 @@ const ListShopsView = () => {
           </Card.Body>
         )}
 
-        {!shops?.length && (
+        {!categories?.length && (
           <div className="text-center p-5">
-            <h2>Sem lojas cadastradas até o momento.</h2>
-            <Link to="adiciona-loja" className="btn btn-success mt-5">
-              Adicionar loja
+            <h2>Sem categorias cadastradas até o momento.</h2>
+            <Link to="/adiciona-categoria" className="btn btn-success mt-5">
+              Adicionar categoria
             </Link>
           </div>
         )}
@@ -148,4 +138,4 @@ const ListShopsView = () => {
   );
 };
 
-export default ListShopsView;
+export default ListCategoriesView;
